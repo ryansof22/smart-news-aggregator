@@ -71,3 +71,19 @@ if not df_news.empty:
 
 else:
     st.warning("Gagal mengambil feed berita. Periksa koneksi internet Anda.")
+
+# Fungsi Pop-up Modal untuk Ringkasan AI
+@st.dialog("📝 Ringkasan AI Single-Source")
+def show_summary_dialog(title, link, raw_summary):
+    st.markdown(f"### {title}")
+    st.caption("Menganalisis artikel dari sumber asli...")
+    
+    with st.spinner("🤖 Gemini sedang meringkas..."):
+        ai_summary = summarize_news_article(link, raw_summary)
+        st.info(ai_summary)
+        st.link_button("🌐 Baca Artikel Lengkap", link, use_container_width=True)
+
+# Panggilan di dalam loop kartu berita:
+# Ganti logika tombol "Ringkas AI" menjadi:
+if st.button("🤖 Ringkas AI", key=f"btn_{idx}", use_container_width=True):
+    show_summary_dialog(row['title'], row['link'], row['summary_raw'])
