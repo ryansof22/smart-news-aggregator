@@ -30,7 +30,7 @@ def extract_article_content(url):
         
         # Mengambil semua tag <p> (paragraf) dari halaman artikel
         paragraphs = soup.find_all("p")
-        article_text = "\n".join([p.get_text().strip() for p None in paragraphs if len(p.get_text().strip()) > 30])
+        article_text = "\n".join([p.get_text().strip() for p in paragraphs if len(p.get_text().strip()) > 30])
         
         # Ambil maksimal 4000 karakter agar hemat token & cepat
         return article_text[:4000] if article_text else None
