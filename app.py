@@ -23,6 +23,17 @@ api_key_input = st.sidebar.text_input("Gemini API Key:", type="password", help="
 if api_key_input:
     os.environ["GEMINI_API_KEY"] = api_key_input
 
+# Fungsi Pop-up Modal untuk Ringkasan AI
+@st.dialog("📝 Ringkasan AI Single-Source")
+def show_summary_dialog(title, link, raw_summary):
+    st.markdown(f"### {title}")
+    st.caption("Menganalisis artikel dari sumber asli...")
+    
+    with st.spinner("🤖 Gemini sedang meringkas..."):
+        ai_summary = summarize_news_article(link, raw_summary)
+        st.info(ai_summary)
+        st.link_button("🌐 Baca Artikel Lengkap", link, use_container_width=True)
+
 @st.cache_data(ttl=600)
 def load_data():
     return fetch_news_feed(limit_per_source=10)
@@ -61,29 +72,9 @@ if not df_news.empty:
                 with c1:
                     st.link_button("🌐 Baca Asli", row['link'], use_container_width=True)
                 with c2:
-                    # Tombol Ringkas AI
+                    # Tombol Ringkas AI dengan Dialog
                     if st.button("🤖 Ringkas AI", key=f"btn_{idx}", use_container_width=True):
-                        with st.spinner("🤖 Gemini sedang menganalisis & meringkas artikel..."):
-                            ai_summary = summarize_news_article(row['link'], row['summary_raw'])
-                            st.markdown("---")
-                            st.markdown("#### 📝 Ringkasan AI Single-Source:")
-                            st.info(ai_summary)
+                        show_summary_dialog(row['title'], row['link'], row['summary_raw'])
 
 else:
     st.warning("Gagal mengambil feed berita. Periksa koneksi internet Anda.")
-
-# Fungsi Pop-up Modal untuk Ringkasan AI
-@st.dialog("📝 Ringkasan AI Single-Source")
-def show_summary_dialog(title, link, raw_summary):
-    st.markdown(f"### {title}")
-    st.caption("Menganalisis artikel dari sumber asli...")
-    
-    with st.spinner("🤖 Gemini sedang meringkas..."):
-        ai_summary = summarize_news_article(link, raw_summary)
-        st.info(ai_summary)
-        st.link_button("🌐 Baca Artikel Lengkap", link, use_container_width=True)
-
-# Panggilan di dalam loop kartu berita:
-# Ganti logika tombol "Ringkas AI" menjadi:
-if st.button("🤖 Ringkas AI", key=f"btn_{idx}", use_container_width=True):
-    show_summary_dialog(row['title'], row['link'], row['summary_raw'])
