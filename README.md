@@ -17,7 +17,5 @@ A Streamlit-based web application that aggregates real-time news feeds from majo
 
 ## 🚀 How to Run Locally
 
-1. Clone this repository:
-   ```bash
-   git clone [https://github.com/ryansof22/smart-news-aggregator.git](https://github.com/ryansof22/smart-news-aggregator.git)
-   cd smart-news-aggregator
+Try In Streamlit : https://smart-news-aggregator.streamlit.app/
+
